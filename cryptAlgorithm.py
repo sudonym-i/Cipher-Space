@@ -2,6 +2,8 @@ import math
 import random
 import string
 
+# INCOMPLETE <--- probably like 80% there to a working base model
+
 def numberRepresentation(string: str) -> list:
     "Returns an array of numbers translated to their ASCII numerical value --> in order"
     values = []
