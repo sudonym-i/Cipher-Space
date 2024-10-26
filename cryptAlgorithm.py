@@ -21,16 +21,26 @@ def codeGeneration(size: int, chars=string.digits) -> str:
     return ''.join(random.choice(chars) for x in range(size))
 
 
-def iterativeSeries (encryptionKey: list, keyIterations: list) -> list:
+def iterativeSeries(encryptionKey: list, keyIterations: list, wholeMessage: list) -> list:
     "Here we create a series predicated off of the attribute parameters previously assigned to each character."
     i = 0; # <--- gross
     encryptedMessage = []
     while i < len(encryptionKey):
+        # Repeats for each character
+        storage = 0
+        x = int(encryptionKey[i][1]) + int(encryptionKey[i][2])
+        a = int(encryptionKey[i][3])
+        b = int(encryptionKey[i][4])
+        c = int(encryptionKey[i][5])
+        print(x,a,b,c)
+
         iTwo = 0
         while iTwo <= keyIterations[i]:
-            encryptedMessage.append()
-        i += 1; # <--- gross
-
+            storage += math.sin( x^2 *a) + (x^b - x^c)# series sin( x^2 *a) + (x^b - x^c)
+            iTwo += 1
+        encryptedMessage.append(int(storage))
+        i +=1
+    return encryptedMessage
 
 def removeDuplicates (string: list) -> list:
     "removes all duplicates, and produces an array including all characters utilized in this message"
@@ -79,12 +89,13 @@ def main() -> None:
     message.charactersInNumbers = removeDuplicates(message.inNumbers)
     message.encryption.keys = attributeParameters(message.charactersInNumbers) # <-- Randomly generates key parameters for each character
 
-    encryptedMessage = iterativeSeries(message.encryption.keys, message.encryption.iterationCount)
+    encryptedMessage = iterativeSeries(message.encryption.keys, message.encryption.iterationCount, message.inNumbers)
 
 
     print(f"letters as numbers:  {message.inNumbers} {type(message.inNumbers)}")
     print(f"Characters utilized in this message:  {message.charactersInNumbers} {type(message.charactersInNumbers)}")
     print(f"paramaters / key values:  {message.encryption.keys} {type(message.encryption.keys)}")
+    print(f"message:  {encryptedMessage} {type(encryptedMessage)}")
 
 
 
