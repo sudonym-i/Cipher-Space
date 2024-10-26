@@ -1,8 +1,8 @@
 import math
 import random
 import string
+import numpy as np
 
-# INCOMPLETE <--- probably like 80% there to a working base model
 
 def numberRepresentation(string: str) -> list:
     "Returns an array of numbers translated to their ASCII numerical value --> in order"
@@ -19,28 +19,46 @@ def codeGeneration(size: int, chars=string.digits) -> str:
     return ''.join(random.choice(chars) for x in range(size))
 
 
-def iterativeSeries(encryptionKey: list, keyIterations: list, wholeMessage: list) -> list:
-    "Here we create a series predicated off of the attribute parameters previously assigned to each character."
-    i = 0; # <--- gross
-    while i < len(wholeMessage):
-        character = encryptCharacter(encryptionKey, keyIterations[i], i)
-        i += 1
-    return encryptedMessage
+def makeMessageInKeys (message: list, keys: list, charToKeys: list) -> list:
+    "takes the entire message and the set of keys, and replaces every character with its corresponding keys"
+    i = 0
+    while i < len(keys):
+        b = 0
+        counter = 1
+        while b < len(message):
+            if (message[b] == charToKeys[i]):
+                message[b] = keys[i];
+                message[b] = str(counter)
+                counter +=1
+            b+=1
+        i+=1
+    return message
 
 
-def encryptCharacter(encryptionKey: list, keyIterations: int, index: int) -> int:
-       # Repeats for each character
-    storage = 0
-    x = int(encryptionKey[i][1]) + int(encryptionKey[i][2])
-    a = int(encryptionKey[i][3])
-    b = int(encryptionKey[i][4])
-    c = int(encryptionKey[i][5])
+def encryptMessage (wholeMessageInKeys: list) -> list:
+    "encrypts the entire message, this is the last stage"
+    i = 0
+    newMessage = []
+    while i < len(wholeMessageInKeys):
+        newMessage.append(encryptCharacter(wholeMessageInKeys, i))
+        i+=1
+    return newMessage
+
+
+def encryptCharacter(messageInKeys: list, i: int) -> int:
+    "takes the array of encryption keys, and returns the [i] key, and encrypts a single character"
+    storage = 0 
+    x = int(messageInKeys[i][0]) + int(messageInKeys[i][1])
+    a = int(messageInKeys[i][2])
+    b = int(messageInKeys[i][3])
+    c = int(messageInKeys[i][4])
+    keyIterations = int(messageInKeys[i][5])
     print(x,a,b,c)
     i = 0
     while i <= keyIterations:
         storage += math.sin( x^2 *a) + (x^b - x^c)# series sin( x^2 *a) + (x^b - x^c)
         i += 1
-    encryptedCharacter.append(int(storage))
+    encryptedCharacter = int(storage)
     return encryptedCharacter
 
 
@@ -71,7 +89,6 @@ def main() -> None:
         " v these values contain the entire message"
         inNumbers = 0;
         inPlainText = "";
-
         " v this is inportant information but !! DOES NOT CONTAIN ENTIRE MESSAGE !! "
         charactersInNumbers = [];
     
@@ -83,22 +100,24 @@ def main() -> None:
         keys = []
         iterationCount = []
         correspondantASCII = [] # <-- this one is a bit more tentative
-
+        wholeMessageInKeys = []
+        finalMessage = []
     message.encryption =  encryptionProperties();
 
     # create my message properties from 
     message.inNumbers = numberRepresentation(message.inPlainText)
     message.charactersInNumbers = removeDuplicates(message.inNumbers)
     message.encryption.keys = attributeParameters(message.charactersInNumbers) # <-- Randomly generates key parameters for each character
-
-    encryptedMessage = iterativeSeries(message.encryption.keys, message.encryption.iterationCount, message.inNumbers)
-
+    message.encryption.wholeMessageInKeys = makeMessageInKeys(message.inNumbers, message.encryption.keys, message.charactersInNumbers)
+    
+    message.encryption.FinalMessage = encryptMessage(message.encryption.wholeMessageInKeys)
 
     print(f"letters as numbers:  {message.inNumbers} {type(message.inNumbers)}")
     print(f"Characters utilized in this message:  {message.charactersInNumbers} {type(message.charactersInNumbers)}")
     print(f"paramaters / key values:  {message.encryption.keys} {type(message.encryption.keys)}")
-    print(f"message:  {encryptedMessage} {type(encryptedMessage)}")
 
-
-
+    print()
+    print()
+    print(f"FIANALLY!! {message.encryption.FinalMessage}")
+    print()
 main()
