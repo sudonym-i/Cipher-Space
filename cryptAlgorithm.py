@@ -1,11 +1,24 @@
 import math
 import random
 import string
-import numpy as np
+
+"""
+This code is meant to take a message, generate keys, and encrypt using these keys. In a final product a new key would not be created for every message, 
+rather a key would be created at the initialization of a text-room, and this key would be utilized for message encryption / decryption for the duration of the conversation.
+
+The idea is that, so long as both users contain this key, all that needs to be sent it the last array (fully encrypted message); which will be 
+reconstructed on the receiving end into a full message;
+"""
+
+"""
+issues still relevant:
+    - series collisions
+    - 0 values not changing with each use
+"""
 
 
 def numberRepresentation(string: str) -> list:
-    "Returns an array of numbers translated to their ASCII numerical value --> in order"
+    "Returns an array of numbers translated to their numerical value --> in order"
     values = []
     i = 0;
     while i < len(string):
@@ -19,7 +32,12 @@ def codeGeneration(size: int, chars=string.digits) -> str:
     return ''.join(random.choice(chars) for x in range(size))
 
 
-def makeMessageInKeys (message: list, keys: list, charToKeys: list) -> list:
+def addValueToEndOfKey (keyAtIndexi: str, value: int) -> str:
+    sumOf = int(keyAtIndexi[5]) + value
+    keyAtIndexi[:-1]
+    return str(keyAtIndexi + str(sumOf))
+
+def makeMessageInKeys (message: list, keys: list, charToKeys: list) -> list: # string
     "takes the entire message and the set of keys, and replaces every character with its corresponding keys"
     i = 0
     while i < len(keys):
@@ -27,15 +45,14 @@ def makeMessageInKeys (message: list, keys: list, charToKeys: list) -> list:
         counter = 1
         while b < len(message):
             if (message[b] == charToKeys[i]):
-                message[b] = keys[i];
-                message[b] = str(counter)
+                message[b] = addValueToEndOfKey(keys[i],counter)
                 counter +=1
             b+=1
         i+=1
     return message
 
 
-def encryptMessage (wholeMessageInKeys: list) -> list:
+def encryptMessage(wholeMessageInKeys: list) -> list:
     "encrypts the entire message, this is the last stage"
     i = 0
     newMessage = []
@@ -48,15 +65,14 @@ def encryptMessage (wholeMessageInKeys: list) -> list:
 def encryptCharacter(messageInKeys: list, i: int) -> int:
     "takes the array of encryption keys, and returns the [i] key, and encrypts a single character"
     storage = 0 
-    x = int(messageInKeys[i][0]) + int(messageInKeys[i][1])
+    x = int(messageInKeys[i][0]) - int(messageInKeys[i][1]) + int(messageInKeys[i][6])
     a = int(messageInKeys[i][2])
     b = int(messageInKeys[i][3])
     c = int(messageInKeys[i][4])
-    keyIterations = int(messageInKeys[i][5])
-    print(x,a,b,c)
+    keyIterations = int(messageInKeys[i][6])
     i = 0
     while i <= keyIterations:
-        storage += math.sin( x^2 * math.factorial(a)) + (x^b - x^c)# series sin( x^2 *a!) + (x^b - x^c)
+        storage += math.sin( x**2 * math.factorial(a)) + (x**b - x**c)# series sin( x^2 *a!) + (x^b - x^c)
         i += 1
     encryptedCharacter = int(storage)
     return encryptedCharacter
@@ -84,7 +100,7 @@ def attributeParameters (usedCharacters: list) -> list:
 
 
 def main() -> None:
-
+    nl = "\n"
     class messageProperties:
         " v these values contain the entire message"
         inNumbers = 0;
@@ -97,27 +113,26 @@ def main() -> None:
 
     class encryptionProperties:
         "This keeps track of my encryption parameters for each character and iteration count (and ASCII correspondance)"
-        keys = []
-        iterationCount = []
-        correspondantASCII = [] # <-- this one is a bit more tentative
-        wholeMessageInKeys = []
-        finalMessage = []
+        keys = [] # str array
+        iterationCount = [] # int array
+        wholeMessageInKeys = []# str array
+        finalMessage = [] # str array
     message.encryption =  encryptionProperties();
 
     # create my message properties from 
     message.inNumbers = numberRepresentation(message.inPlainText)
+    print(f"{nl}message.inNumbers: {message.inNumbers} <- this array contains the entire message, with each character translated to a number. EX: a = 108 for all a's{nl}")
     message.charactersInNumbers = removeDuplicates(message.inNumbers)
+    print(f"message.charactersInNumbers: {message.charactersInNumbers} <- this array contains the number-representaion of each utilized character - repititions have been removed{nl}")
     message.encryption.keys = attributeParameters(message.charactersInNumbers) # <-- Randomly generates key parameters for each character
+    print(f"message.encryption.keys: {message.encryption.keys} <- this array contains the randomly generated key for each character (no repititions here either){nl}(last digit is the iterateion-use counter){nl}")
     message.encryption.wholeMessageInKeys = makeMessageInKeys(message.inNumbers, message.encryption.keys, message.charactersInNumbers)
+    print(f"message.encryption.wholeMessageInKeys { message.encryption.wholeMessageInKeys} <- this is the original message recunstructed in terms of keys{nl}(with iteration counts computed and encoded in the last digit){nl}")
     
+
+
     message.encryption.FinalMessage = encryptMessage(message.encryption.wholeMessageInKeys)
 
-    print(f"letters as numbers:  {message.inNumbers} {type(message.inNumbers)}")
-    print(f"Characters utilized in this message:  {message.charactersInNumbers} {type(message.charactersInNumbers)}")
-    print(f"paramaters / key values:  {message.encryption.keys} {type(message.encryption.keys)}")
+    print(f"{nl}FIANALLY!! {message.encryption.FinalMessage} <- this is the message fully encrypted. This is the information that would actually be sent, and later reconstructed into the full message{nl}These values are arrived at by using the key values as parameters for an iterative series, using the last digit to increase iteration (and x value) with each utilization (refer to screen-shot){nl}")
 
-    print()
-    print()
-    print(f"FIANALLY!! {message.encryption.FinalMessage}")
-    print()
 main()
