@@ -56,7 +56,7 @@ def encryptCharacter(messageInKeys: list, i: int) -> int:
     print(x,a,b,c)
     i = 0
     while i <= keyIterations:
-        storage += math.sin( x^2 *a) + (x^b - x^c)# series sin( x^2 *a) + (x^b - x^c)
+        storage += math.sin( x^2 * math.factorial(a)) + (x^b - x^c)# series sin( x^2 *a!) + (x^b - x^c)
         i += 1
     encryptedCharacter = int(storage)
     return encryptedCharacter
