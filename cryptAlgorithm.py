@@ -37,6 +37,7 @@ def addValueToEndOfKey (keyAtIndexi: str, value: int) -> str:
     keyAtIndexi[:-1]
     return str(keyAtIndexi + str(sumOf))
 
+
 def makeMessageInKeys (message: list, keys: list, charToKeys: list) -> list: # string
     "takes the entire message and the set of keys, and replaces every character with its corresponding keys"
     i = 0
@@ -95,7 +96,6 @@ def attributeParameters (usedCharacters: list) -> list:
         if (randomCode not in keyValues): # <-- checks and corrects for repeats 
             keyValues.append(randomCode)
             i += 1
-
     return keyValues
 
 
@@ -119,7 +119,6 @@ def main() -> None:
         finalMessage = [] # str array
     message.encryption =  encryptionProperties();
 
-    # create my message properties from 
     message.inNumbers = numberRepresentation(message.inPlainText)
     print(f"{nl}message.inNumbers: {message.inNumbers} <- this array contains the entire message, with each character translated to a number. EX: a = 108 for all a's{nl}")
     message.charactersInNumbers = removeDuplicates(message.inNumbers)
@@ -129,10 +128,7 @@ def main() -> None:
     message.encryption.wholeMessageInKeys = makeMessageInKeys(message.inNumbers, message.encryption.keys, message.charactersInNumbers)
     print(f"message.encryption.wholeMessageInKeys { message.encryption.wholeMessageInKeys} <- this is the original message recunstructed in terms of keys{nl}(with iteration counts computed and encoded in the last digit){nl}")
     
-
-
     message.encryption.FinalMessage = encryptMessage(message.encryption.wholeMessageInKeys)
-
     print(f"{nl}FIANALLY!! {message.encryption.FinalMessage} <- this is the message fully encrypted. This is the information that would actually be sent, and later reconstructed into the full message{nl}These values are arrived at by using the key values as parameters for an iterative series, using the last digit to increase iteration (and x value) with each utilization (refer to screen-shot){nl}")
 
 main()
