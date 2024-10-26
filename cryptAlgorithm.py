@@ -7,12 +7,10 @@ import string
 def numberRepresentation(string: str) -> list:
     "Returns an array of numbers translated to their ASCII numerical value --> in order"
     values = []
-
     i = 0;
     while i < len(string):
         values.append(int(ord(string[i])));
         i += 1;
-    
     return values
         
 
@@ -24,23 +22,27 @@ def codeGeneration(size: int, chars=string.digits) -> str:
 def iterativeSeries(encryptionKey: list, keyIterations: list, wholeMessage: list) -> list:
     "Here we create a series predicated off of the attribute parameters previously assigned to each character."
     i = 0; # <--- gross
-    encryptedMessage = []
-    while i < len(encryptionKey):
-        # Repeats for each character
-        storage = 0
-        x = int(encryptionKey[i][1]) + int(encryptionKey[i][2])
-        a = int(encryptionKey[i][3])
-        b = int(encryptionKey[i][4])
-        c = int(encryptionKey[i][5])
-        print(x,a,b,c)
-
-        iTwo = 0
-        while iTwo <= keyIterations[i]:
-            storage += math.sin( x^2 *a) + (x^b - x^c)# series sin( x^2 *a) + (x^b - x^c)
-            iTwo += 1
-        encryptedMessage.append(int(storage))
-        i +=1
+    while i < len(wholeMessage):
+        character = encryptCharacter(encryptionKey, keyIterations[i], i)
+        i += 1
     return encryptedMessage
+
+
+def encryptCharacter(encryptionKey: list, keyIterations: int, index: int) -> int:
+       # Repeats for each character
+    storage = 0
+    x = int(encryptionKey[i][1]) + int(encryptionKey[i][2])
+    a = int(encryptionKey[i][3])
+    b = int(encryptionKey[i][4])
+    c = int(encryptionKey[i][5])
+    print(x,a,b,c)
+    i = 0
+    while i <= keyIterations:
+        storage += math.sin( x^2 *a) + (x^b - x^c)# series sin( x^2 *a) + (x^b - x^c)
+        i += 1
+    encryptedCharacter.append(int(storage))
+    return encryptedCharacter
+
 
 def removeDuplicates (string: list) -> list:
     "removes all duplicates, and produces an array including all characters utilized in this message"
@@ -55,7 +57,7 @@ def attributeParameters (usedCharacters: list) -> list:
     keyValues = [] # <-- This array will store 6 digit integers, each index will be used for a different letter (I couldnt be bothered to figure out 2d arrays for python)
     #                                           ** empty spaces will just become 0's **
     while i < len(usedCharacters):
-        randomCode = (codeGeneration(6))
+        randomCode = (codeGeneration(5)) + "0"; # create a code, the lase digit representing iteration count (restarts after 9 iterations)
         if (randomCode not in keyValues): # <-- checks and corrects for repeats 
             keyValues.append(randomCode)
             i += 1
