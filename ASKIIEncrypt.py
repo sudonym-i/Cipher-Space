@@ -30,7 +30,6 @@ def numberRepresentation(string: str) -> list:
         
 
 def codeGeneration(size: int, chars=string.digits + string.ascii_lowercase + string.ascii_uppercase) -> str:
-    "This bad boy is courtesy of our lord and savior; Stack Overflow"
     return ''.join(random.choice(chars) for x in range(size))
 
 
@@ -121,7 +120,7 @@ def main() -> None:
         keys = [] # str array
         iterationCount = [] # int array
         wholeMessageInKeys = []# str array
-        finalMessage = [] # str array
+        finalMessage = [] # int array
     message.encryption =  encryptionProperties();
 
     message.inNumbers = numberRepresentation(message.inPlainText)
