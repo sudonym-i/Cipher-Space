@@ -10,9 +10,11 @@ def parseArrayInChunks (messageKeys):
     tempString = ""
     i = 1
     while i < messageKeys:
+        tempString.append(messageKeys[i-1])
         if (i % 6 == 0):
             finalArray.append(tempString)
             tempString = ""
+    return finalArray
         
 
 def encryptCharacter(charInKeys: list, i: int) -> int:
