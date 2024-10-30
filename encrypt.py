@@ -11,9 +11,16 @@ reconstructed on the receiving end into a full message;
 """
 
 """
-issues still relevant:
+Issues still relevant:
     - series collisions
 """
+
+def download(input: list) -> None:
+    data = input.read()
+    filename = "Encryption_Key_&_Map.txt"
+    file_ = open(filename, 'w')
+    file_.write(data)
+    file_.close()
 
 def askiiToInt (digit: str) -> str:
     return int(ord(str(digit)))
@@ -23,7 +30,7 @@ def numberRepresentation(string: str) -> list:
     "Returns an array of numbers translated to their numerical value --> in order"
     values = []
     i = 0;
-    while i < len(string):
+    while (i < len(string)):
         values.append(int(ord(string[i])));
         i += 1;
     return values
@@ -42,10 +49,10 @@ def addValueToEndOfKey (keyAtIndexi: str, value: int) -> str:
 def makeMessageInKeys (message: list, keys: list, charToKeys: list) -> list: # string
     "takes the entire message and the set of keys, and replaces every character with its corresponding keys"
     i = 0
-    while i < len(keys):
+    while (i < len(keys)):
         b = 0
         counter = 1
-        while b < len(message):
+        while (b < len(message)):
             if (message[b] == charToKeys[i]):
                 message[b] = addValueToEndOfKey(keys[i],counter)
                 if (counter < 9):
@@ -135,5 +142,5 @@ def main() -> None:
     
     message.encryption.finalMessage = encryptMessage(message.encryption.wholeMessageInKeys)
     print(f"{nl}FIANALLY!! {message.encryption.finalMessage} <- this is the message fully encrypted. This is the information that would actually be sent, and later reconstructed into the full message{nl}These values are arrived at by using the key values as parameters for an iterative series, using the last digit to increase iteration (and decrease x value) with each utilization (refer to screen-shot){nl}")
-
+    download(message.encryption.finalMessage)
 main()

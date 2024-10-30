@@ -58,10 +58,11 @@ def main () -> None:
         finalMessage = [] # int array
     message.encryption =  encryptionProperties();
 
-    message.encryption.keys = list(input("copy-paste the encryption keys (NOT the one titled 'whole message in keys'): "))
+    message.encryption.keys = parseArrayInChunks((input("copy-paste the encryption keys (NOT the one titled 'whole message in keys'): ")))
     message.charactersInNumbers = list(input(f"copy-paste 'characters in numbers'"))
     message.encryption.finalMessage = list(input(f"{nl}copy-paste the fully encrypted message: ")) # <- this is the only 
     # information that would actually be transmitted; the rest would be part of the 'conversation setup'
+    
     print(buildExpectedCharacters(message.encryption.keys))
 
 main()
