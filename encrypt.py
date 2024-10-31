@@ -13,6 +13,7 @@ reconstructed on the receiving end into a full message;
 """
 Issues still relevant:
     - series collisions
+    - download function incomplete
 """
 
 def download(input: list) -> None:
