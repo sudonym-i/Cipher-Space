@@ -15,13 +15,6 @@ Issues still relevant:
     - series collisions
 """
 
-def download(input: list) -> None:
-    data = input.read()
-    filename = "Encryption_Key_&_Map.txt"
-    file_ = open(filename, 'w')
-    file_.write(data)
-    file_.close()
-
 def askiiToInt (digit: str) -> str:
     return int(ord(str(digit)))
 
@@ -142,5 +135,5 @@ def main() -> None:
     
     message.encryption.finalMessage = encryptMessage(message.encryption.wholeMessageInKeys)
     print(f"{nl}FIANALLY!! {message.encryption.finalMessage} <- this is the message fully encrypted. This is the information that would actually be sent, and later reconstructed into the full message{nl}These values are arrived at by using the key values as parameters for an iterative series, using the last digit to increase iteration (and decrease x value) with each utilization (refer to screen-shot){nl}")
-    download(message.encryption.finalMessage)
+
 main()
