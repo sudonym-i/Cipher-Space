@@ -15,6 +15,14 @@ Issues still relevant:
     - series collisions
 """
 
+def generateFinalMessageAsSTR(message: list) -> str:
+    response = ""
+    for i in message:
+        response = response + "|"
+        response = response + i
+    response = response + "$"
+    return response
+
 def askiiToInt (digit: str) -> str:
     return int(ord(str(digit)))
 
@@ -62,7 +70,7 @@ def encryptMessage(wholeMessageInKeys: list) -> list:
     i = 0
     newMessage = []
     while i < len(wholeMessageInKeys):
-        newMessage.append(encryptCharacter(wholeMessageInKeys, i))
+        newMessage.append(str(encryptCharacter(wholeMessageInKeys, i)))
         i+=1
     return newMessage
 
@@ -121,6 +129,7 @@ def main() -> None:
         iterationCount = [] # int array
         wholeMessageInKeys = []# str array
         finalMessage = [] # int array
+        finalMessageSTR = [] # str array
     message.encryption =  encryptionProperties();
 
     message.inNumbers = numberRepresentation(message.inPlainText)
@@ -134,6 +143,7 @@ def main() -> None:
     print(f"message.encryption.wholeMessageInKeys { message.encryption.wholeMessageInKeys} <- this is the original message recunstructed in terms of keys{nl}(with iteration counts computed and encoded in the last digit){nl}")
     
     message.encryption.finalMessage = encryptMessage(message.encryption.wholeMessageInKeys)
-    print(f"{nl}FIANALLY!! {message.encryption.finalMessage} <- this is the message fully encrypted. This is the information that would actually be sent, and later reconstructed into the full message{nl}These values are arrived at by using the key values as parameters for an iterative series, using the last digit to increase iteration (and decrease x value) with each utilization (refer to screen-shot){nl}")
+    message.encryption.finalMessageSTR = generateFinalMessageAsSTR(message.encryption.finalMessage)
 
+    print(f"{nl}FIANALLY!! {message.encryption.finalMessageSTR} <- this is the message fully encrypted. This is the information that would actually be sent, and later reconstructed into the full message{nl}These values are arrived at by using the key values as parameters for an iterative series, using the last digit to increase iteration (and decrease x value) with each utilization (refer to screen-shot){nl}")
 main()
