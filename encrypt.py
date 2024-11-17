@@ -3,7 +3,7 @@ import random
 import string
 
 """
-This is a novel method of encryption.
+This is a novel method of encryption. Some aspects are still in more of a proof-of-concept form.
 
 This code is meant to take a message, generate keys, and encrypt using these keys. In a final product a new key would not be created for every message, 
 rather a key would be created at the initialization of a text-room, and this key would be utilized for message encryption / decryption for the duration of the conversation.
@@ -20,9 +20,7 @@ Issues still relevant:
 def generateFinalMessageAsSTR(message: list) -> str:
     response = ""
     for i in message:
-        response = response + "|"
-        response = response + i
-    response = response + "$"
+        response += "|"; response += i; response +=  "$"
     return response
 
 def askiiToInt (digit: str) -> str:
@@ -31,8 +29,7 @@ def askiiToInt (digit: str) -> str:
 
 def numberRepresentation(string: str) -> list:
     "Returns an array of numbers translated to their numerical value --> in order"
-    values = []
-    i = 0;
+    values = []; i = 0;
     while (i < len(string)):
         values.append(int(ord(string[i])));
         i += 1;
@@ -51,29 +48,23 @@ def addValueToEndOfKey (keyAtIndexi: str, value: int) -> str:
 
 def makeMessageInKeys (message: list, keys: list, charToKeys: list) -> list: # string
     "takes the entire message and the set of keys, and replaces every character with its corresponding keys"
-    i = 0
-    while (i < len(keys)):
-        b = 0
+    for i in range(len(keys)):
         counter = 1
-        while (b < len(message)):
+        for b in range(len(message)):
             if (message[b] == charToKeys[i]):
                 message[b] = addValueToEndOfKey(keys[i],counter)
                 if (counter < 9):
                     counter +=1
                 else: 
                     counter = 0
-            b+=1
-        i+=1
     return message
 
 
 def encryptMessage(wholeMessageInKeys: list) -> list:
     "encrypts the entire message, this is the last stage"
-    i = 0
     newMessage = []
-    while i < len(wholeMessageInKeys):
+    for i in range(len(wholeMessageInKeys)):
         newMessage.append(str(encryptCharacter(wholeMessageInKeys, i)))
-        i+=1
     return newMessage
 
 
@@ -81,20 +72,16 @@ def encryptCharacter(messageInKeys: list, i: int) -> int:
     "takes the array of encryption keys, and returns the [i] key, and encrypts a single character"
     storage = 0 
     x = askiiToInt(messageInKeys[i][0]) - askiiToInt(messageInKeys[i][1]) + askiiToInt(messageInKeys[i][6])
-    a = askiiToInt(messageInKeys[i][2])
-    b = askiiToInt(messageInKeys[i][3])
-    c = askiiToInt(messageInKeys[i][4])
-    keyIterations = int(messageInKeys[i][6]) / 2
-    i = 0
-    while i <= keyIterations:
+    a = askiiToInt(messageInKeys[i][2]);         b = askiiToInt(messageInKeys[i][3]);         c = askiiToInt(messageInKeys[i][4]);
+    keyIterations = int(int(messageInKeys[i][6]) / 2) + 1
+    for i in range(keyIterations):
         storage += math.sin( x**2 * math.factorial(a)) + (x**b - x**c)# series sin( x^2 *a!) + (x^b - x^c) where a = uses/2 and x = x + uses *uses resets after 9*
-        i += 1
     encryptedCharacter = int(storage)
     return encryptedCharacter
 
 
 def removeDuplicates (string: list) -> list:
-    "removes all duplicates, and produces an array including all characters utilized in this message"
+    "removes all duplicates, and produces an array including all characters utilized in this message (I know its a little redundant)"
     return list(set(string))
 
 
@@ -102,19 +89,16 @@ def attributeParameters (usedCharacters: list) -> list:
     """**Returns as strings**  Give each letter a set of numerical parameters which will define its unique iterative series PER CHARACTER
      --> These values will be the "key" used to encrypt, and later decrypt, the message [currently 6 parameters employed]
     """
-    i = 0
     keyValues = [] # <-- This array will store 6 digit integers, each index will be used for a different letter (I couldnt be bothered to figure out 2d arrays for python)
     #                                           ** empty spaces will just become 0's **
-    while i < len(usedCharacters):
+    for i in range(len(usedCharacters)):
         randomCode = (codeGeneration(5)) + "0"; # create a code, the lase digit representing iteration count (restarts after 9 iterations)
         if (randomCode not in keyValues): # <-- checks and corrects for repeats 
             keyValues.append(randomCode)
-            i += 1
     return keyValues
 
 
 def main() -> None:
-    nl = "\n"
     class messageProperties:
         " v these values contain the entire message"
         inNumbers = 0;
@@ -135,17 +119,17 @@ def main() -> None:
     message.encryption =  encryptionProperties();
 
     message.inNumbers = numberRepresentation(message.inPlainText)
-    print(f"{nl}message.inNumbers: {message.inNumbers} <- this array contains the entire message, with each character translated to a number. EX: a = 108 for all a's{nl}")
+    print(f"\nmessage.inNumbers: {message.inNumbers} <- this array contains the entire message, with each character translated to a number. EX: a = 108 for all a's\n")
     message.charactersInNumbers = removeDuplicates(message.inNumbers)
-    print(f"message.charactersInNumbers: {message.charactersInNumbers} <- this array contains the number-representaion of each utilized character - repititions have been removed{nl}")
+    print(f"message.charactersInNumbers: {message.charactersInNumbers} <- this array contains the number-representaion of each utilized character - repititions have been removed\n")
   
     message.encryption.keys = attributeParameters(message.charactersInNumbers) # <-- Randomly generates key parameters for each character
-    print(f"message.encryption.keys: {message.encryption.keys} <- this array contains the randomly generated key for each character (no repititions here either){nl}(last digit is the iterateion-use counter){nl}")
+    print(f"message.encryption.keys: {message.encryption.keys} <- this array contains the randomly generated key for each character (no repititions here either)\n(last digit is the iterateion-use counter)\n")
     message.encryption.wholeMessageInKeys = makeMessageInKeys(message.inNumbers, message.encryption.keys, message.charactersInNumbers)
-    print(f"message.encryption.wholeMessageInKeys { message.encryption.wholeMessageInKeys} <- this is the original message recunstructed in terms of keys{nl}(with iteration counts computed and encoded in the last digit){nl}")
+    print(f"message.encryption.wholeMessageInKeys { message.encryption.wholeMessageInKeys} <- this is the original message recunstructed in terms of keys\n(with iteration counts computed and encoded in the last digit)\n")
     
     message.encryption.finalMessage = encryptMessage(message.encryption.wholeMessageInKeys)
     message.encryption.finalMessageSTR = generateFinalMessageAsSTR(message.encryption.finalMessage)
 
-    print(f"{nl}FIANALLY!! {message.encryption.finalMessageSTR} <- this is the message fully encrypted. This is the information that would actually be sent, and later reconstructed into the full message{nl}These values are arrived at by using the key values as parameters for an iterative series, using the last digit to increase iteration (and decrease x value) with each utilization (refer to screen-shot){nl}")
+    print(f"\nFIANALLY!! {message.encryption.finalMessageSTR} <- this is the message fully encrypted. This is the information that would actually be sent, and later reconstructed into the full message\nThese values are arrived at by using the key values as parameters for an iterative series, using the last digit to increase iteration (and decrease x value) with each utilization (refer to screen-shot)\n")
 main()
