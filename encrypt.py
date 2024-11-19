@@ -18,10 +18,7 @@ Issues still relevant:
 """
 
 def generateFinalMessageAsSTR(message: list) -> str:
-    response = ""
-    for i in message:
-        response += "|"; response += i; response +=  "$"
-    return response
+    return "%".join(message)
 
 def askiiToInt (digit: str) -> str:
     return int(ord(str(digit)))
@@ -30,9 +27,8 @@ def askiiToInt (digit: str) -> str:
 def numberRepresentation(string: str) -> list:
     "Returns an array of numbers translated to their numerical value --> in order"
     values = []; i = 0;
-    while (i < len(string)):
-        values.append(int(ord(string[i])));
-        i += 1;
+    for i in string:
+        values.append(int(ord(i)));
     return values
         
 
@@ -90,11 +86,14 @@ def attributeParameters (usedCharacters: list) -> list:
      --> These values will be the "key" used to encrypt, and later decrypt, the message [currently 6 parameters employed]
     """
     keyValues = [] # <-- This array will store 6 digit integers, each index will be used for a different letter (I couldnt be bothered to figure out 2d arrays for python)
-    #                                           ** empty spaces will just become 0's **
-    for i in range(len(usedCharacters)):
+    #       
+    #                                     ** empty spaces will just become 0's **
+    i = 0
+    while i < len(usedCharacters):
         randomCode = (codeGeneration(5)) + "0"; # create a code, the lase digit representing iteration count (restarts after 9 iterations)
         if (randomCode not in keyValues): # <-- checks and corrects for repeats 
             keyValues.append(randomCode)
+            i += 1
     return keyValues
 
 
