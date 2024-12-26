@@ -1,6 +1,8 @@
 import math
 import random
 import string
+import qrcode
+
 
 """
 
@@ -109,6 +111,12 @@ def download(message, keys, characterMap):
     file = open("messageAndKeys.txt","w")
     file.write(f"{message}\n{keys}\n{characterMap}")
     file.close()
+
+    " Download QR code"
+    img = qrcode.make(str(keys) + '#' + str(characterMap))
+    type(img)  # qrcode.image.pil.PilImage
+    img.save("keysOnQR.png")
+
 
 def main() -> None:
     class messageProperties:
