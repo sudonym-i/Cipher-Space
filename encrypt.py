@@ -3,7 +3,6 @@ import random
 import string
 
 """
-This is a experimental method of encryption. Some aspects are still in more of a proof-of-concept form.
 
 This code is meant to take a message, generate keys, and encrypt using these keys. In a final product a new key would not be created for every message, 
 rather a key would be created at the initialization of a text-room, and this key would be utilized for message encryption / decryption for the duration of the conversation.
