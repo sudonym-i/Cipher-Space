@@ -14,7 +14,13 @@ reconstructed on the receiving end into a full message;
 
 """
 Issues still relevant:
-    - series collisions
+    - series collisions (just check x in y, before saving iteration)
+
+Ideas for improvement:
+    - assign each step a random step amount (for x,y and sum)
+    - perhaps having the functions overlap would make it more difficult to decipher
+    - use hexidecimal to increase the number of possible permutations
+    
 """
 
 def generateFinalMessageAsSTR(message: list) -> str:
@@ -96,6 +102,14 @@ def attributeParameters (usedCharacters: list) -> list:
             i += 1
     return keyValues
 
+def download(message, keys, characterMap):
+    keys = str(keys).strip("[]")
+    keys = keys.replace("'",""); keys = keys.replace(",","%"); keys = keys.replace(" ","")
+    characterMap = str(characterMap).strip("[]")
+    characterMap = characterMap.replace("'",""); characterMap = characterMap.replace(",","%"); characterMap = characterMap.replace(" ","")
+    file = open("messageAndKeys.txt","w")
+    file.write(f"{message}\n{keys}\n{characterMap}")
+    file.close()
 
 def main() -> None:
     class messageProperties:
@@ -130,5 +144,8 @@ def main() -> None:
     message.encryption.finalMessage = encryptMessage(message.encryption.wholeMessageInKeys)
     message.encryption.finalMessageSTR = generateFinalMessageAsSTR(message.encryption.finalMessage)
 
-    print(f"\nFIANALLY!! {message.encryption.finalMessageSTR} <- this is the message fully encrypted. This is the information that would actually be sent, and later reconstructed into the full message\nThese values are arrived at by using the key values as parameters for an iterative series, using the last digit to increase iteration (and decrease x value) with each utilization (refer to screen-shot)\n")
+    print(f"\nFIANALLY!! {message.encryption.finalMessageSTR} <- this is the message fully encrypted. This is the information that would actually be sent, and later reconstructed into the full message\nThese values are arrived at by using the key values as parameters for an iterative series, using the last digit to increase iteration (and decrease x value) with each utilizationS\n")
+
+    download(message.encryption.finalMessageSTR, message.encryption.keys.copy(), message.charactersInNumbers.copy())
+
 main()

@@ -1,67 +1,47 @@
 import math
-import random
-import string
+
 
 def askiiToInt (digit: str) -> str:
     return int(ord(str(digit)))
 
-def parseArrayInChunks (messageKeys):
-    finalArray = []
-    tempString = ""
-    i = 1
-    while i < messageKeys:
-        tempString.append(messageKeys[i-1])
-        if (i % 6 == 0):
-            finalArray.append(tempString)
-            tempString = ""
-    return finalArray
-        
 
-def encryptCharacter(charInKeys: list, i: int) -> int:
-    "takes the array of encryption keys, and returns the [i] key, and encrypts a single character"
-    storage = 0 
-    x = askiiToInt(charInKeys[i][0]) - askiiToInt(charInKeys[i][1]) + askiiToInt(charInKeys[i][6])
-    a = askiiToInt(charInKeys[i][2])
-    b = askiiToInt(charInKeys[i][3])
-    c = askiiToInt(charInKeys[i][4])
-    keyIterations = int(charInKeys[i][6]) / 2
-    i = 0
-    while i <= keyIterations:
-        storage += math.sin( x**2 * math.factorial(a)) + (x**b - x**c)# series sin( x^2 *a!) + (x^b - x^c) where a = uses/2 and x = x + uses *uses resets after 9*
-        i += 1
-    encryptedCharacter = int(storage)
-    return encryptedCharacter
+def buildExpectedChars(keys):
+    output = []
+    for chars in keys:
+        storage = 0 
+        x = askiiToInt(chars[0]) - askiiToInt(chars[1]) + askiiToInt(chars[6])
+        a = askiiToInt(chars[2]);         b = askiiToInt(chars[3]);         c = askiiToInt(chars[4]);
+        keyIterations = int(int(chars[6]) / 2) + 1
+        for i in range(keyIterations):
+            storage += math.sin( x**2 * math.factorial(a)) + (x**b - x**c)
+        output.append(int(storage))
+    return output
 
-def buildExpectedCharacters(messageKeys) -> list:
-    i = 0
-    expectedChars = []
-    while i < len(messageKeys):
-        expectedChars.append(encryptCharacter(messageKeys, i));
-        i += 1
-    return expectedChars
 
-def main () -> None:
-    nl = "\n"
-    class messageProperties:
-        " v these values contain the entire message"
-        inNumbers = 0;
-        inPlainText = "";
-        " v this is inportant information but !! DOES NOT CONTAIN ENTIRE MESSAGE !! "
-        charactersInNumbers = [];
-    message = messageProperties()
 
-    class encryptionProperties:
-        "This keeps track of my encryption parameters for each character and iteration count (and ASCII correspondance)"
-        keys = [] # str array
-        iterationCount = [] # int array
-        wholeMessageInKeys = []# str array
-        finalMessage = [] # int array
-    message.encryption =  encryptionProperties();
 
-    message.encryption.keys = list(input("copy-paste the encryption keys (NOT the one titled 'whole message in keys'): "))
-    message.charactersInNumbers = list(input(f"copy-paste 'characters in numbers'"))
-    message.encryption.finalMessage = list(input(f"{nl}copy-paste the fully encrypted message: ")) # <- this is the only 
-    # information that would actually be transmitted; the rest would be part of the 'conversation setup'
-    print(buildExpectedCharacters(message.encryption.keys))
+def main():
+    decrypted = "" 
+
+    file = open("messageAndKeys.txt","r")
+    message = file.readline().strip("\n").split("%")
+    keys = file.readline().strip("\n").split("%")
+    charMap = file.readline().strip("\n").split("%")
+    print(str(message) + "\n" + str(keys) + "\n" + str(charMap))
+    for i in range(len(keys)):
+        keys[i] = keys[i]+'1'
+
+    expected = buildExpectedChars(keys)
+    print(str(expected))
+
+    for chars in range(len(message)):
+        for i in range(len(expected)):
+            if str(expected[i]) == message[chars]:
+                decrypted = decrypted +(chr(int(charMap[i])))
+                keys[i] = keys[i][:-1] + str(int(keys[i][-1])+1)
+                expected = buildExpectedChars(keys)
+
+    print(F"\n{decrypted}\n")
+
 
 main()
