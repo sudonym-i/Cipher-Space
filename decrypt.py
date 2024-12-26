@@ -1,9 +1,7 @@
 import math
 
-
 def askiiToInt (digit: str) -> str:
     return int(ord(str(digit)))
-
 
 def buildExpectedChars(keys):
     output = []
@@ -16,9 +14,6 @@ def buildExpectedChars(keys):
             storage += math.sin( x**2 * math.factorial(a)) + (x**b - x**c)
         output.append(int(storage))
     return output
-
-
-
 
 def main():
     decrypted = "" 
@@ -42,6 +37,5 @@ def main():
                 expected = buildExpectedChars(keys)
 
     print(F"\n{decrypted}\n")
-
 
 main()

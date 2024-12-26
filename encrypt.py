@@ -16,8 +16,8 @@ Issues still relevant:
     - series collisions (just check x in y, before saving iteration)
 
 Ideas for improvement:
-    - assign each step a random step amount (for x,y and sum)
-    - perhaps having the functions overlap would make it more difficult to decipher
+    - assign each step a random step amount (for x and sum)
+    - perhaps having the functions overlap more would make it more difficult to decipher
     - use hexidecimal to increase the number of possible permutations
     
 """
